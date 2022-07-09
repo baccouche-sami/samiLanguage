@@ -1,0 +1,21 @@
+
+fn addition: tmp1, tmp2
+  return tmp1 + tmp2
+end
+
+fn main
+  a = 1
+  b = 0
+  if a < 2
+    b = a * 2
+  else if a > 2
+    b = 2
+  else
+    a = 3
+  end
+  while a < 100
+    a = a + addition(a,b)
+  end
+println(a)
+end
+main()

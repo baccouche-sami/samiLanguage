@@ -107,9 +107,8 @@ module Sami
       end
       raise 'Unterminated string error.' if source_completed?
 
-      consume # consuming the closing '"'.
+      consume
       lexeme = source[(lexeme_start_p)..(next_p - 1)]
-      # the actual value of the string is the content between the double quotes.
       literal = source[(lexeme_start_p + 1)..(next_p - 2)]
 
       Token.new(:string, lexeme, literal, current_location)
@@ -118,9 +117,8 @@ module Sami
     def number
       consume_digits
 
-      # Look for a fractional part.
       if lookahead == '.' && digit?(lookahead(2))
-        consume # consuming the '.' character.
+        consume
         consume_digits
       end
 
@@ -159,7 +157,7 @@ module Sami
     end
 
     def source_completed?
-      next_p >= source.length # our pointer starts at 0, so the last char is length - 1.
+      next_p >= source.length
     end
 
     def source_uncompleted?

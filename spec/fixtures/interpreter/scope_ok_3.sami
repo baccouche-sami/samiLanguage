@@ -6,4 +6,3 @@ fn my_func: param_1, param_2
 end
 
 my_func("param_1", "param_2")
-param_1 # Should raise an error, since param_1 does not exist in the global scope.

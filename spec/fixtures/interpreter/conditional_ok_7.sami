@@ -1,4 +1,4 @@
-if true and "hey" == "hey" # In Stoffle, two strings are equal if they have the exact same content.
+if true and "hey" == "hey"
   println("IF block evaluated.")
 else
   println("ELSE block evaluated.")

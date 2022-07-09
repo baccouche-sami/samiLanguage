@@ -45,14 +45,11 @@ module Sami
         raise Sami::Error::WrongNumArg.new(fn_def.function_name_as_str, given, expected)
       end
 
-      # Applying the values passed in this particular function call to the respective defined parameters.
       if fn_def.params != nil
         fn_def.params.each_with_index do |param, i|
           if env.has_key?(param.name)
-            # A global variable is already defined. We assign the passed in value to it.
             env[param.name] = interpret_node(fn_call.args[i])
           else
-            # A global variable with the same name doesn't exist. We create a new local variable.
             stack_frame.env[param.name] = interpret_node(fn_call.args[i])
           end
         end
@@ -72,15 +69,13 @@ module Sami
         if return_detected?(node)
           raise Sami::Error::UnexpectedReturn unless call_stack.length > 0
 
-          self.unwind_call_stack = call_stack.length # We store the current stack level to know when to stop returning.
+          self.unwind_call_stack = call_stack.length 
           return last_value
         end
 
         if unwind_call_stack == call_stack.length
-          # We are still inside a function that returned, so we keep on bubbling up from its structures (e.g., conditionals, loops etc).
           return last_value
         elsif unwind_call_stack > call_stack.length
-          # We returned from the function, so we reset the "unwind indicator".
           self.unwind_call_stack = -1
         end
       end
@@ -108,15 +103,12 @@ module Sami
 
     def interpret_var_binding(var_binding)
       if call_stack.length > 0
-        # We are inside a function. If the name points to a global var, we assign the value to it.
-        # Otherwise, we create and / or assign to a local var.
         if env.has_key?(var_binding.var_name_as_str)
           env[var_binding.var_name_as_str] = interpret_node(var_binding.right)
         else
           call_stack.last.env[var_binding.var_name_as_str] = interpret_node(var_binding.right)
         end
       else
-        # We are not inside a function. Therefore, we create and / or assign to a global var.
         env[var_binding.var_name_as_str] = interpret_node(var_binding.right)
       end
     end
